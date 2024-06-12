@@ -1,5 +1,9 @@
+import UserContext from "../utils/UserContext";
 import UserClass from "./UserClass";
+import { useContext } from "react";
+
 const About = ()=> {
+    //const {loggedInUser} = useContext(UserContext);
     return (
         <div>
             <h1 className="font-bold px-4 py-2">About</h1>

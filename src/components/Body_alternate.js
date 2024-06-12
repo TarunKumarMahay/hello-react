@@ -1,21 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import { createContext } from "react";
+import UserContext from "../utils/UserContext";
 const Body_alternate = () => {
 
     //superPowerfull local state variable
     const [listOfResturants, setListOfResturants] = useState([]);
     const [filteredResturants , setFilteredResturants] = useState([])
     const [searchText, setSearchText] = useState("");
-    
-    useEffect(() => { fetchData() }, []);
+    const {loggedInUser, setUserName} = useContext(UserContext);
+
+    useEffect(() => { 
+        fetchData();
+    }, []);
+
     const fetchData = async () => {
         const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6234157&lng=77.297958&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
         const json = await data.json();
        
-        setListOfResturants(/*json?.data?.cards[2]?.data?.data?.cards)*/json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+        setListOfResturants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
         setFilteredResturants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);    
     };
 
@@ -63,7 +69,13 @@ const Body_alternate = () => {
                 }}
                 >Top Rated Resturants</button>
                 </div>
-
+                <div className="flex items-center" >
+                    <label className="p-2">UserName : </label>
+                    <input className="border border-black p-2" value = {loggedInUser}
+                        onChange={(e) => {
+                        setUserName(e.target.value);
+                    }}/>                    
+                </div>
             </div>
            
             <div className="flex flex-wrap">
